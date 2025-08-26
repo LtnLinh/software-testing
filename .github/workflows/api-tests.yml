@@ -28,6 +28,8 @@ jobs:
           docker compose up -d
           # Wait for containers to be ready
           sleep 10
+          # Install missing FFI runtime library
+          docker compose exec laravel-api apk add --no-cache libffi
           # Install Composer dependencies using the composer service
           docker compose run --rm composer
           # Run migrations and seed
