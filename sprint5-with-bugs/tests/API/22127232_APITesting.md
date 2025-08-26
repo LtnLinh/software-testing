@@ -241,6 +241,8 @@ Each test case follows a standardized structure:
 
 #### 1. POST /users/register - User Registration
 
+Required fields for successful registration: first_name, last_name, address, city, country, dob (Y-m-d), email, password.
+
 | Test Case ID | Test Name                    | Type | Input Data | Expected Status | Description                               |
 | ------------ | ---------------------------- | ---- | ---------- | --------------- | ----------------------------------------- |
 | User-TC001   | Register New User            | Functional | email: t1@mail.com, password: K9#mP2$vL, firstname: John, lastname: Doe | 201 | Register with valid data |
@@ -489,63 +491,6 @@ The pipeline executes three separate test flows:
 - **Consistent Results**: Standardized test execution
 - **Quick Feedback**: Immediate test result availability
 
----
-
-## AI Tools Usage (ChatGPT)
-
-### Test Case Design Prompts
-
-#### 1. Generate User Registration Test Scenarios
-
-```
-Generate comprehensive test scenarios for a user registration API endpoint (POST /users/register). Include positive tests, negative tests, validation tests, and security tests. Consider email uniqueness, email validation, password strength requirements, and edge cases.
-```
-
-#### 2. Create Login Test Data
-
-```
-Create test data for user login API testing with the following requirements:
-- 8 test cases for POST /users/login
-- Include valid credentials, invalid credentials, empty fields
-- Include different email formats and password variations
-- Format as CSV with columns: test_case_id, test_name, method, endpoint, email, password, expected_status, description
-```
-
-#### 3. Design User Update Tests
-
-```
-Design test cases for user update API (PATCH /users/{userId}) that include:
-- Valid user updates for individual fields
-- Invalid data formats
-- Authentication requirements
-- Authorization checks
-- Field validation rules
-- Security considerations
-```
-
-### CI/CD Prompts
-
-```
-Create a GitHub Actions workflow for User API testing that:
-- Runs on push to main branch
-- Uses Newman to execute Postman collections
-- Tests user registration, login, and user updates
-- Generates separate test reports for each API endpoint
-- Publishes results to GitHub
-- Includes proper error handling and reporting
-```
-
-### Security Testing Prompts
-
-```
-Generate security test scenarios for user authentication APIs including:
-- Password strength validation
-- Token expiration testing
-- Session management
-- Input sanitization
-- SQL injection prevention
-- XSS prevention
-```
 
 ## Self-Assessment
 
@@ -560,46 +505,3 @@ Generate security test scenarios for user authentication APIs including:
 | **Total**           |                                        | **10.0**   | **10.0**        |     |
 
 ### Bug Report Summary
-
-#### No Critical Bugs Found
-All test cases passed successfully with expected results. The User APIs demonstrate:
-
-- **Proper Authentication**: All protected endpoints correctly require authentication
-- **Input Validation**: Email format validation works correctly
-- **Duplicate Prevention**: Registration properly prevents duplicate emails
-- **Error Handling**: Appropriate HTTP status codes returned for different scenarios
-- **Security**: No unauthorized access vulnerabilities detected
-
-#### Minor Observations
-- All APIs return consistent and appropriate HTTP status codes
-- Error messages are descriptive and helpful
-- Authentication flow works as expected
-- Data validation is properly implemented
-
-### Recommendations
-
-1. **Security Improvements**:
-   - Implement proper authentication checks for all protected endpoints
-   - Add input validation for all user inputs
-   - Implement rate limiting for login attempts
-
-2. **Error Handling**:
-   - Standardize error response formats
-   - Improve validation error messages
-   - Add proper logging for debugging
-
-3. **Testing Enhancements**:
-   - Add performance testing for high-load scenarios
-   - Implement automated security testing
-   - Add integration tests with database
-
----
-
-## Conclusion
-
-This comprehensive API testing report demonstrates thorough testing of User APIs with a 100% success rate. All 17 test cases across 3 API endpoints passed successfully, indicating robust implementation of authentication, validation, and error handling. The testing approach successfully validated all functional and security requirements.
-
-The implementation of data-driven testing and CI/CD integration provides a robust foundation for continuous quality assurance. The use of AI tools enhanced test case design and documentation quality, while the systematic testing approach ensures comprehensive coverage of all user management scenarios.
-
-This assignment successfully achieved all learning objectives and demonstrates professional API testing capabilities with excellent results.
-

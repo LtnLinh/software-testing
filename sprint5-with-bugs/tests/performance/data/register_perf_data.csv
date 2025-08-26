@@ -1,6 +1,6 @@
-first_name,last_name,email,password,password_confirmation
-John,Smith,perf_user1@test.com,Password123!,Password123!
-Jane,Doe,perf_user2@test.com,Password123!,Password123!
-Bob,Johnson,perf_user3@test.com,Password123!,Password123!
-Alice,Brown,perf_user4@test.com,Password123!,Password123!
-Charlie,Wilson,perf_user5@test.com,Password123!,Password123!
+first_name,last_name,email,password
+John,Smith,perf_user1@test.com,Password123!
+Jane,Doe,perf_user2@test.com,Password123!
+Bob,Johnson,perf_user3@test.com,Password123!
+Alice,Brown,perf_user4@test.com,Password123!
+Charlie,Wilson,perf_user5@test.com,Password123!
