@@ -85,7 +85,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"first_name\":\"{{firstname}}\",\n  \"last_name\":\"{{lastname}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+							"raw": "{\n  \"first_name\":\"{{firstname}}\",\n  \"last_name\":\"{{lastname}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"address\":\"{{address}}\",\n  \"city\":\"{{city}}\",\n  \"country\":\"{{country}}\",\n  \"dob\":\"{{dob}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
