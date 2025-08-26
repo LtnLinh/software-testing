@@ -27,10 +27,6 @@ jobs:
         run: |
           npm install -g newman newman-reporter-htmlextra
 
-      - name: Start application with Docker Compose
-        run: |
-          docker compose up -d
-
       - name: Create Laravel .env file
         run: |
           cd sprint5-with-bugs/API
@@ -42,6 +38,10 @@ jobs:
           sed -i 's/DB_PASSWORD=${SECRET_DB_PASS}/DB_PASSWORD=root/g' .env
           sed -i 's/APP_ENV=production/APP_ENV=local/g' .env
           sed -i 's/APP_DEBUG=false/APP_DEBUG=true/g' .env
+
+      - name: Start application with Docker Compose
+        run: |
+          docker compose up -d
 
       - name: Run migrations and seed
         run: |
