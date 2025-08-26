@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  SPRINT: sprint5-with-bugs
+  DISABLE_LOGGING: true
+
 jobs:
   api-test:
     runs-on: ubuntu-latest
@@ -26,12 +30,6 @@ jobs:
       - name: Start application with Docker Compose
         run: |
           docker compose up -d
-          # Wait for containers to be ready
-          sleep 10
-          # Install missing FFI runtime library as root
-          docker compose exec --user root laravel-api apk add --no-cache libffi
-          # Install Composer dependencies using the composer service
-          docker compose run --rm composer
           # Run migrations and seed
           docker compose exec laravel-api php artisan migrate:fresh --seed
 
