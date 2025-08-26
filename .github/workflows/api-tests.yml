@@ -43,6 +43,10 @@ jobs:
         run: |
           docker compose up -d
 
+      - name: Install Composer dependencies
+        run: |
+          docker compose run --rm composer
+
       - name: Run migrations and seed
         run: |
           docker compose exec laravel-api php artisan migrate:fresh --seed
