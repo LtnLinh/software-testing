@@ -17,11 +17,12 @@ jobs:
     steps:
       - name: Checkout ⚙️
         uses: actions/checkout@v4
-        
+
       - name: Start containers 🐳
         run: |
+          SPRINT=sprint5-with-bugs
           export DISABLE_LOGGING=true
-          docker compose -f docker-compose.yml up -d --force-recreate
+          docker compose -f docker-compose.prod.yml up --pull missing -d
       - name: Sleep for 60 seconds
         run: sleep 60s
         shell: bash
