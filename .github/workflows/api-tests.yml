@@ -43,6 +43,10 @@ jobs:
         run: |
           docker compose up -d
 
+      - name: Install required utilities
+        run: |
+          docker compose exec --user root laravel-api apk add --no-cache unzip
+
       - name: Install Composer dependencies
         run: |
           docker compose run --rm composer
