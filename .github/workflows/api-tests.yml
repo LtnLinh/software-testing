@@ -31,6 +31,11 @@ jobs:
         run: |
           mkdir -p test-results/newman
 
+      - name: Run Login API Tests
+        working-directory: sprint5-with-bugs/tests/API
+        run: |
+          newman run collection.json --folder "LoginAPI" -e env.json -d data/login_test_data.csv --reporters cli,htmlextra --reporter-htmlextra-export ../../../test-results/newman/login-api-tests.html
+
       - name: Run Register API Tests
         working-directory: sprint5-with-bugs/tests/API
         run: |
@@ -40,11 +45,6 @@ jobs:
         working-directory: sprint5-with-bugs/tests/API
         run: |
           newman run collection.json --folder "UpdateUserAPI" -e env.json -d data/update_user_test_data.csv --reporters cli,htmlextra --reporter-htmlextra-export ../../../test-results/newman/update-user-api-tests.html
-
-      - name: Run Login API Tests
-        working-directory: sprint5-with-bugs/tests/API
-        run: |
-          newman run collection.json --folder "LoginAPI" -e env.json -d data/login_test_data.csv --reporters cli,htmlextra --reporter-htmlextra-export ../../../test-results/newman/login-api-tests.html
 
       - name: Upload Newman HTML Reports
         if: always()
