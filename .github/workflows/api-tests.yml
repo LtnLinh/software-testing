@@ -1,0 +1,57 @@
+name: API Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  run-api-tests:
+    runs-on: ubuntu-latest
+    env:
+      SPRINT: sprint5-with-bugs
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Start required services
+      run: |
+        docker compose up -d
+
+    - name: Run DB migrations and seeders
+      run: |
+        docker compose exec laravel-api php artisan migrate:fresh --seed
+
+    - name: Wait for API to be ready
+      run: |
+        for i in $(seq 1 90); do
+          if curl -sSf http://localhost:8091/status >/dev/null; then
+            echo "API is up"; exit 0; fi; sleep 2;
+        done
+        echo "API did not start in time"
+        docker compose -f docker-compose.yml logs web | tail -n 200
+        exit 1
+
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Register API tests
+      run: |
+        newman run sprint5-with-bugs/tests/API/collection.json \
+          -e sprint5-with-bugs/tests/API/env.json \
+          --folder "RegisterAPI" \
+          --iteration-data sprint5-with-bugs/tests/API/data/register_test_data.csv
+
+    - name: Login API tests
+      run: |
+        newman run sprint5-with-bugs/tests/API/collection.json \
+          -e sprint5-with-bugs/tests/API/env.json \
+          --folder "LoginAPI" \
+          --iteration-data sprint5-with-bugs/tests/API/data/login_test_data.csv
+
+    - name: Update User API tests
+      run: |
+        newman run sprint5-with-bugs/tests/API/collection.json \
+          -e sprint5-with-bugs/tests/API/env.json \
+          --folder "UpdateUserAPI" \
+          --iteration-data sprint5-with-bugs/tests/API/data/update_user_test_data.csv

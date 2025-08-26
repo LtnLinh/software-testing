@@ -1,0 +1,12 @@
+REGISTER PERFORMANCE TESTING SUMMARY
+===================================
+Timestamp: 20250825_132946
+Test Environment: localhost:8091
+
+TEST RESULTS:
+
+=== register_load ===
+
+=== register_spike ===
+
+=== register_stress ===

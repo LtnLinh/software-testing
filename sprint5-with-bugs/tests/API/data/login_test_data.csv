@@ -1,0 +1,8 @@
+test_case_id,test_name,method,endpoint,email,password,expected_status,description
+User-TC009,Login with Valid Credentials,POST,/users/login,customer@practicesoftwaretesting.com,welcome01,200,Login with correct credentials
+User-TC010,Login with Invalid Password,POST,/users/login,t1@mail.com,wrongPass,401,Login with wrong password
+User-TC011,Login with Non-existent Email,POST,/users/login,notexist@mail.com,Pass1234,401,Login with unregistered email
+User-TC012,Login with Empty Fields,POST,/users/login,,,401,Login with blank fields
+User-TC013,Login with Empty Email Only,POST,/users/login,,Pass1234,401,Login with empty email only
+User-TC014,Login with Empty Password Only,POST,/users/login,t1@mail.com,,401,Login with empty password only
+User-TC015,Login with Case Sensitive Email,POST,/users/login,CUSTOMER@MPRACTICESOFTWARETESTING.COM,welcome01,401,Login with different case email

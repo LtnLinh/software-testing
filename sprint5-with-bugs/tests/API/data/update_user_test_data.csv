@@ -1,0 +1,4 @@
+test_case_id,test_name,method,endpoint,update_field,update_value,expected_status,description
+User-TC017,Update User First Name,PATCH,/users/{id},first_name,haha,200,Update first name only
+User-TC018,Update User Last Name,PATCH,/users/{id},last_name,huhu,200,Update last name only
+User-TC019,Update User with Invalid Email,PATCH,/users/{id},email,abc,400,Update with invalid email format

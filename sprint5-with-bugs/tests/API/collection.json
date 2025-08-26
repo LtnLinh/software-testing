@@ -1,0 +1,275 @@
+{
+	"info": {
+		"_postman_id": "38124e0e-008a-4ab7-92ca-2f9e7748fcb1",
+		"name": "UserAPIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46356798",
+		"_collection_link": "https://ngoclinhle.postman.co/workspace/Ngoc-Linh-Le's-Workspace~b0cedb08-29b5-458e-8260-ea971a303c00/collection/46356798-38124e0e-008a-4ab7-92ca-2f9e7748fcb1?action=share&source=collection_link&creator=46356798"
+	},
+	"item": [
+		{
+			"name": "RegisterAPI",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Register should return expected_status\", function () {",
+									"    pm.response.to.have.status(parseInt(pm.iterationData.get('expected_status')));",
+									"});",
+									"var id;",
+									"if(pm.response.to.have.status(201)){",
+									"    id = pm.response.json().id;",
+									"}",
+									"var token;",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"base_url\") + \"/users/login\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            email: pm.environment.get(\"admin_email\"),",
+									"            password: pm.environment.get(\"admin_password\")",
+									"        })",
+									"    }",
+									"}, function (err, res) {",
+									"    if (err) {",
+									"        console.error(\"Login failed:\", err);",
+									"    } else {",
+									"        token = res.json().access_token;",
+									"    }",
+									"});",
+									"",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"base_url\") + \"/users/\" + id,",
+									"    method: 'DELETE',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization': 'Bearer ' + token",
+									"    }",
+									"}, function (err, res) {",
+									"    if (err) {",
+									"        console.error(\"Login failed:\", err);",
+									"    }",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\":\"{{firstname}}\",\n  \"last_name\":\"{{lastname}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UpdateUserAPI",
+			"item": [
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"base_url\") + \"/users/login\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            email: pm.environment.get(\"user_email\"),",
+									"            password: pm.environment.get(\"user_password\")",
+									"        })",
+									"    }",
+									"}, (req, res) => {",
+									"    let token = res.json().access_token;",
+									"    pm.sendRequest({",
+									"        url: pm.environment.get(\"base_url\") + \"/users/me\",",
+									"        method: 'GET',",
+									"        header: {",
+									"            'Content-Type': 'application/json',",
+									"            'Authorization': 'Bearer ' + token",
+									"        }",
+									"    }, (req, res) => {",
+									"            pm.environment.set('id', res.json().id);",
+									"    })",
+									"    pm.environment.set('token', res.json().access_token);",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is matched\", function () {",
+									"    pm.response.to.have.status(pm.iterationData.get('expected_status'));",
+									"})",
+									"pm.environment.unset('id')",
+									"pm.environment.unset('token')"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"{{update_field}}\":\"{{update_value}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LoginAPI",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login should return expected_status\", () => {",
+									"    pm.response.to.have.status(parseInt(pm.iterationData.get('expected_status')));",
+									"});",
+									"",
+									"if(pm.response.json().status == 200)",
+									"pm.test(\"Token received\", () => {",
+									"    pm.expect(pm.response.json().access_token).to.not.be.null;",
+									"})",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8091",
+			"type": "default"
+		}
+	]
+}

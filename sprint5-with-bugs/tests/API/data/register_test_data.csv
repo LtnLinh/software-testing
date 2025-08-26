@@ -1,0 +1,8 @@
+test_case_id,test_name,method,endpoint,email,password,firstname,lastname,expected_status,description
+User-TC001,Register New User,POST,/users/register,t1@mail.com,K9#mP2$vL,John,Doe,201,Register with valid data
+User-TC002,Register with Existing Email,POST,/users/register,customer@practicesoftwaretesting.com,K9#mP2$vL,Jane,Smith,422,Try to register with existing email
+User-TC003,Register with Invalid Email,POST,/users/register,haha,K9#mP2$vL,Bob,Johnson,422,Register with invalid email format
+User-TC005,Register with Empty Email,POST,/users/register,,K9#mP2$vL,Charlie,Wilson,422,Register with empty email
+User-TC006,Register with Empty Password,POST,/users/register,t1@mail.com,,David,Miller,422,Register with empty password
+User-TC007,Register with Empty First Name,POST,/users/register,t1@mail.com,K9#mP2$vL,,Emma,422,Register with empty first name
+User-TC008,Register with Empty Last Name,POST,/users/register,t1@mail.com,K9#mP2$vL,Grace,,422,Register with empty last name

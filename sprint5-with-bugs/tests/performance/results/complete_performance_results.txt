@@ -1,0 +1,183 @@
+=== Complete Performance Test Results ===
+Date: Mon Aug 25 13:10:28 +07 2025
+Target URL: http://localhost:8091/users/login
+
+=== APACHE BENCH TESTS ===
+--- Light Load Test Results ---
+This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient).....done
+
+
+Server Software:        nginx
+Server Hostname:        localhost
+Server Port:            8091
+
+Document Path:          /users/login
+Document Length:        430 bytes
+
+Concurrency Level:      10
+Time taken for tests:   2.948 seconds
+Complete requests:      100
+Failed requests:        0
+Total transferred:      73800 bytes
+Total body sent:        22800
+HTML transferred:       43000 bytes
+Requests per second:    33.93 [#/sec] (mean)
+Time per request:       294.762 [ms] (mean)
+Time per request:       29.476 [ms] (mean, across all concurrent requests)
+Transfer rate:          24.45 [Kbytes/sec] received
+                        7.55 kb/s sent
+                        32.00 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       0
+Processing:    87  277 114.6    250     678
+Waiting:       87  276 114.6    250     678
+Total:         87  277 114.6    250     678
+
+Percentage of the requests served within a certain time (ms)
+  50%    250
+  66%    263
+  75%    289
+  80%    332
+  90%    476
+  95%    545
+  98%    623
+  99%    678
+ 100%    678 (longest request)
+
+--- Medium Load Test Results ---
+This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Finished 500 requests
+
+
+Server Software:        nginx
+Server Hostname:        localhost
+Server Port:            8091
+
+Document Path:          /users/login
+Document Length:        430 bytes
+
+Concurrency Level:      50
+Time taken for tests:   10.060 seconds
+Complete requests:      500
+Failed requests:        0
+Total transferred:      369000 bytes
+Total body sent:        114000
+HTML transferred:       215000 bytes
+Requests per second:    49.70 [#/sec] (mean)
+Time per request:       1006.004 [ms] (mean)
+Time per request:       20.120 [ms] (mean, across all concurrent requests)
+Transfer rate:          35.82 [Kbytes/sec] received
+                        11.07 kb/s sent
+                        46.89 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.3      0       1
+Processing:    80  947 180.4    965    1270
+Waiting:       79  947 180.4    965    1270
+Total:         80  947 180.2    965    1270
+
+Percentage of the requests served within a certain time (ms)
+  50%    965
+  66%    979
+  75%    990
+  80%   1002
+  90%   1092
+  95%   1208
+  98%   1240
+  99%   1255
+ 100%   1270 (longest request)
+
+--- Stress Test Results ---
+This is ApacheBench, Version 2.3 <$Revision: 1913912 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Completed 600 requests
+Completed 700 requests
+Completed 800 requests
+Completed 900 requests
+Completed 1000 requests
+Finished 1000 requests
+
+
+Server Software:        nginx
+Server Hostname:        localhost
+Server Port:            8091
+
+Document Path:          /users/login
+Document Length:        430 bytes
+
+Concurrency Level:      100
+Time taken for tests:   21.759 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      738000 bytes
+Total body sent:        228000
+HTML transferred:       430000 bytes
+Requests per second:    45.96 [#/sec] (mean)
+Time per request:       2175.872 [ms] (mean)
+Time per request:       21.759 [ms] (mean, across all concurrent requests)
+Transfer rate:          33.12 [Kbytes/sec] received
+                        10.23 kb/s sent
+                        43.36 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.6      0       3
+Processing:    75 2072 458.7   2131    2934
+Waiting:       73 2072 458.7   2131    2934
+Total:         75 2072 458.3   2131    2934
+
+Percentage of the requests served within a certain time (ms)
+  50%   2131
+  66%   2197
+  75%   2248
+  80%   2297
+  90%   2431
+  95%   2814
+  98%   2853
+  99%   2881
+ 100%   2934 (longest request)
+
+=== JMETER TESTS (FIXED) ===
+=== PERFORMANCE TEST SUMMARY ===
+Test Date: Mon Aug 25 13:11:04 +07 2025
+Target URL: http://localhost:8091/users/login
+
+Key Performance Metrics:
+
+Apache Bench Results:
+- Light Load (100 req, 10 concurrent): 0% error rate
+- Medium Load (500 req, 50 concurrent): 0% error rate
+- Stress Load (1000 req, 100 concurrent): 0% error rate
+
+JMeter Results (Fixed):
+- Light Load (20 users, 10 loops): 0% error rate, 717ms avg response
+- Stress Load (50 users, 5 loops): 0% error rate
+
+Issue Resolution:
+- Fixed JMeter 401 Unauthorized error by using form data instead of raw JSON
+- Content-Type changed from application/json to application/x-www-form-urlencoded
+- Both tools now working correctly with 0% error rates
