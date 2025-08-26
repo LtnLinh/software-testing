@@ -187,9 +187,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/{{id}}",
+							"raw": "{{base_url}}/users/{{id}}",
 							"host": [
-								"{{baseURL}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"users",
@@ -250,9 +250,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/login",
+							"raw": "{{base_url}}/users/login",
 							"host": [
-								"{{baseURL}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"users",
@@ -263,13 +263,6 @@
 					"response": []
 				}
 			]
-		}
-	],
-	"variable": [
-		{
-			"key": "baseURL",
-			"value": "https://api-with-bugs.practicesoftwaretesting.com",
-			"type": "default"
 		}
 	]
 }
