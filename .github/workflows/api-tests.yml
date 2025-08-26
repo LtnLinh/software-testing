@@ -49,7 +49,8 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          docker compose run --rm composer
+          # Install unzip in the composer service and run composer install
+          docker compose run --rm --entrypoint "sh -c 'apk add --no-cache unzip && composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-ffi && chown -R www-data /var/www && chmod 777 /var/www'" composer
 
       - name: Run migrations and seed
         run: |
