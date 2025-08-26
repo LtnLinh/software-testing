@@ -36,10 +36,10 @@ jobs:
         run: |
           docker compose up -d
 
-      - name: Disable FFI extension
+      - name: Install PHP FFI extension
         run: |
-          # Disable FFI extension to prevent PHP startup errors
-          docker compose exec --user root laravel-api sh -c "echo 'ffi.enable=0' > /usr/local/etc/php/conf.d/ffi.ini"
+          # Install PHP FFI extension to resolve startup warnings
+          docker compose exec --user root laravel-api apk add --no-cache php83-ffi
 
       - name: Initialize Laravel application
         run: |
