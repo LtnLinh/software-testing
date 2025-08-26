@@ -6,9 +6,7 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  SPRINT: sprint5-with-bugs
-  DISABLE_LOGGING: true
+concurrency: production_environment
 
 jobs:
   api-test:
@@ -21,22 +19,7 @@ jobs:
         run: |
           export SPRINT=sprint5-with-bugs
           export DISABLE_LOGGING=true
-          docker compose -f docker-compose.yml up -d
-
-      - name: Wait for containers to be ready
-        run: |
-          echo "Waiting for containers to be ready..."
-          timeout=120
-          counter=0
-          while [ $counter -lt $timeout ]; do
-            if docker compose ps | grep -q "Up"; then
-              echo "Containers are running!"
-              break
-            fi
-            echo "Waiting for containers... ($counter/$timeout)"
-            sleep 5
-            counter=$((counter + 5))
-          done
+          docker compose -f docker-compose.yml up -d --force-recreate
 
       - name: Disable FFI extension
         run: |
@@ -47,6 +30,10 @@ jobs:
             echo 'ffi.enable=0' >> /usr/local/etc/php/conf.d/ffi.ini
             echo 'FFI extension disabled successfully'
           "
+      
+      - name: Sleep for 60 seconds
+        run: sleep 60s
+        shell: bash
 
       - name: Create & Seed database 🌱
         run: |
