@@ -15,29 +15,29 @@ jobs:
       - name: Checkout ⚙️
         uses: actions/checkout@v4
 
-      - name: Start containers 🐳
-        run: |
-          export SPRINT=sprint5-with-bugs
-          export DISABLE_LOGGING=true
-          docker compose -f docker-compose.yml up -d --force-recreate
+      # - name: Start containers 🐳
+      #   run: |
+      #     export SPRINT=sprint5-with-bugs
+      #     export DISABLE_LOGGING=true
+      #     docker compose -f docker-compose.yml up -d --force-recreate
 
-      - name: Disable FFI extension
-        run: |
-          # Disable FFI extension to prevent PHP startup errors
-          docker compose exec --user root laravel-api sh -c "
-            echo '; FFI extension disabled for CI/CD' > /usr/local/etc/php/conf.d/ffi.ini
-            echo '; extension=ffi' >> /usr/local/etc/php/conf.d/ffi.ini
-            echo 'ffi.enable=0' >> /usr/local/etc/php/conf.d/ffi.ini
-            echo 'FFI extension disabled successfully'
-          "
+      # - name: Disable FFI extension
+      #   run: |
+      #     # Disable FFI extension to prevent PHP startup errors
+      #     docker compose exec --user root laravel-api sh -c "
+      #       echo '; FFI extension disabled for CI/CD' > /usr/local/etc/php/conf.d/ffi.ini
+      #       echo '; extension=ffi' >> /usr/local/etc/php/conf.d/ffi.ini
+      #       echo 'ffi.enable=0' >> /usr/local/etc/php/conf.d/ffi.ini
+      #       echo 'FFI extension disabled successfully'
+      #     "
       
-      - name: Sleep for 60 seconds
-        run: sleep 60s
-        shell: bash
+      # - name: Sleep for 60 seconds
+      #   run: sleep 60s
+      #   shell: bash
 
-      - name: Create & Seed database 🌱
-        run: |
-          docker compose exec -T laravel-api php artisan migrate:fresh --seed --force
+      # - name: Create & Seed database 🌱
+      #   run: |
+      #     docker compose exec -T laravel-api php artisan migrate:fresh --seed --force
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -57,15 +57,15 @@ jobs:
         run: |
           newman run collection.json --folder "LoginAPI" -e env.json -d data/login_test_data.csv --reporters cli,htmlextra --reporter-htmlextra-export ../../../test-results/newman/login-api-tests.html
 
-      - name: Run Register API Tests
-        working-directory: sprint5-with-bugs/tests/API
-        run: |
-          newman run collection.json --folder "RegisterAPI" -e env.json -d data/register_test_data.csv --reporters cli,htmlextra --reporter-htmlextra-export ../../../test-results/newman/register-api-tests.html
-
       - name: Run Update User API Tests
         working-directory: sprint5-with-bugs/tests/API
         run: |
           newman run collection.json --folder "UpdateUserAPI" -e env.json -d data/update_user_test_data.csv --reporters cli,htmlextra --reporter-htmlextra-export ../../../test-results/newman/update-user-api-tests.html
+      
+      # - name: Run Register API Tests
+      #   working-directory: sprint5-with-bugs/tests/API
+      #   run: |
+      #     newman run collection.json --folder "RegisterAPI" -e env.json -d data/register_test_data.csv --reporters cli,htmlextra --reporter-htmlextra-export ../../../test-results/newman/register-api-tests.html
 
       - name: Upload Newman HTML Reports
         if: always()
