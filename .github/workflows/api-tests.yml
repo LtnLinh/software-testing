@@ -30,7 +30,7 @@ jobs:
 
       - name: Migrate and seed inside container
         run: |
-          SPRINT=${{ env.SPRINT }} docker compose exec -T laravel-api php artisan migrate:fresh --seed --no-interaction
+          SPRINT=${{ env.SPRINT }} docker compose exec -T -e APP_ENV=testing laravel-api php artisan migrate:fresh --seed --no-interaction --force
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
