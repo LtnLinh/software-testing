@@ -38,9 +38,39 @@ jobs:
             counter=$((counter + 5))
           done
 
+      - name: Disable FFI extension
+        run: |
+          # Disable FFI extension to prevent PHP startup errors
+          docker compose -f docker-compose.prod.yml exec --user root laravel-api sh -c "
+            echo '; FFI extension disabled for CI/CD' > /usr/local/etc/php/conf.d/ffi.ini
+            echo '; extension=ffi' >> /usr/local/etc/php/conf.d/ffi.ini
+            echo 'ffi.enable=0' >> /usr/local/etc/php/conf.d/ffi.ini
+            echo 'FFI extension disabled successfully'
+          "
+
+      - name: Wait for database to be ready
+        run: |
+          echo "Waiting for database to be ready..."
+          timeout=60
+          counter=0
+          while [ $counter -lt $timeout ]; do
+            if docker compose -f docker-compose.prod.yml exec mariadb mysqladmin ping -h localhost -u root -proot --silent; then
+              echo "Database is ready!"
+              break
+            fi
+            echo "Database not ready yet... ($counter/$timeout)"
+            sleep 5
+            counter=$((counter + 5))
+          done
+          if [ $counter -eq $timeout ]; then
+            echo "Database connection failed"
+            docker compose -f docker-compose.prod.yml logs mariadb
+            exit 1
+          fi
+
       - name: Create & Seed database 🌱
         run: |
-          docker compose exec -T laravel-api php artisan migrate:refresh --seed
+          docker compose -f docker-compose.prod.yml exec -T laravel-api php artisan migrate:fresh --seed --force
 
       - name: Use Node.js
         uses: actions/setup-node@v4
