@@ -27,58 +27,6 @@ jobs:
         run: |
           npm install -g newman newman-reporter-htmlextra
 
-      - name: Create root .env file
-        run: |
-          echo "SPRINT=sprint5-with-bugs" > .env
-          echo "DISABLE_LOGGING=true" >> .env
-
-      - name: Start application with Docker Compose
-        run: |
-          docker compose up -d
-
-      - name: Disable FFI extension in PHP
-        run: |
-          # Find and disable FFI extension loading in PHP configuration
-          docker compose exec --user root laravel-api sh -c "
-            echo 'Searching for FFI extension configuration...'
-            find /usr/local/etc/php -name '*.ini' -exec grep -l 'ffi' {} \; || echo 'No FFI config found'
-            echo 'Disabling FFI extension...'
-            echo '; FFI extension disabled for CI/CD' > /usr/local/etc/php/conf.d/ffi.ini
-            echo '; extension=ffi' >> /usr/local/etc/php/conf.d/ffi.ini
-            echo 'ffi.enable=0' >> /usr/local/etc/php/conf.d/ffi.ini
-            echo 'FFI extension configuration updated'
-          "
-
-      - name: Initialize Laravel application
-        run: |
-          # Update Composer to latest version
-          docker compose run --rm --entrypoint "composer self-update" composer
-          # Clear Composer cache
-          docker compose run --rm --entrypoint "composer clear-cache" composer
-          # Install unzip in the composer service and run composer install
-          docker compose run --rm --entrypoint "sh -c 'apk add --no-cache unzip && composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-ffi && chown -R www-data /var/www && chmod 777 /var/www'" composer
-          # Run migrations and seed database
-          docker compose exec laravel-api php artisan migrate:fresh --seed
-
-      - name: Wait for API to be ready
-        run: |
-          echo "Waiting for API to be ready..."
-          timeout=120
-          counter=0
-          while [ $counter -lt $timeout ]; do
-            if curl -f http://localhost:8091/api/health > /dev/null 2>&1 || curl -f http://localhost:8091/health > /dev/null 2>&1 || curl -f http://localhost:8091/ > /dev/null 2>&1; then
-              echo "API is ready!"
-              break
-            fi
-            echo "API not ready yet, waiting... ($counter/$timeout)"
-            sleep 5
-            counter=$((counter + 5))
-          done
-          if [ $counter -eq $timeout ]; then
-            echo "Timeout waiting for API to be ready"
-            exit 1
-          fi
-
       - name: Prepare report directory
         run: |
           mkdir -p test-results/newman
