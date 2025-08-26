@@ -30,7 +30,21 @@ jobs:
       - name: Start application with Docker Compose
         run: |
           docker compose up -d
-          # Run migrations and seed
+
+      - name: Create Laravel .env file
+        run: |
+          cd sprint5-with-bugs/API
+          cp .env_template .env
+          # Update database configuration for Docker environment
+          sed -i 's/DB_HOST=127.0.0.1/DB_HOST=mariadb/g' .env
+          sed -i 's/DB_DATABASE=${SECRET_DB}_with_bugs/DB_DATABASE=toolshop/g' .env
+          sed -i 's/DB_USERNAME=${SECRET_DB_USER}/DB_USERNAME=user/g' .env
+          sed -i 's/DB_PASSWORD=${SECRET_DB_PASS}/DB_PASSWORD=root/g' .env
+          sed -i 's/APP_ENV=production/APP_ENV=local/g' .env
+          sed -i 's/APP_DEBUG=false/APP_DEBUG=true/g' .env
+
+      - name: Run migrations and seed
+        run: |
           docker compose exec laravel-api php artisan migrate:fresh --seed
 
       - name: Wait for API to be ready
