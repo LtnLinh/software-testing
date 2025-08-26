@@ -38,26 +38,6 @@ jobs:
             counter=$((counter + 5))
           done
 
-      - name: Check API health
-        run: |
-          echo "Checking API health..."
-          timeout=60
-          counter=0
-          while [ $counter -lt $timeout ]; do
-            if curl -f http://localhost:8091/api/documentation > /dev/null 2>&1; then
-              echo "API is healthy!"
-              break
-            fi
-            echo "API not ready yet... ($counter/$timeout)"
-            sleep 5
-            counter=$((counter + 5))
-          done
-          if [ $counter -eq $timeout ]; then
-            echo "API health check failed"
-            docker compose -f docker-compose.prod.yml logs
-            exit 1
-          fi
-
       - name: Create & Seed database 🌱
         run: |
           docker compose exec -T laravel-api php artisan migrate:refresh --seed
