@@ -68,6 +68,29 @@ jobs:
             exit 1
           fi
 
+      - name: Debug container status and networking
+        run: |
+          echo "=== Container Status ==="
+          docker compose -f docker-compose.prod.yml ps
+          echo ""
+          echo "=== Container Logs ==="
+          docker compose -f docker-compose.prod.yml logs web
+          echo ""
+          echo "=== Network Interfaces ==="
+          ip addr show
+          echo ""
+          echo "=== Port Listening ==="
+          netstat -tlnp || ss -tlnp
+          echo ""
+          echo "=== Docker Networks ==="
+          docker network ls
+          echo ""
+          echo "=== Testing localhost:8091 ==="
+          curl -v http://localhost:8091/ || echo "curl failed"
+          echo ""
+          echo "=== Testing 127.0.0.1:8091 ==="
+          curl -v http://127.0.0.1:8091/ || echo "curl failed"
+
       - name: Create & Seed database 🌱
         run: |
           docker compose -f docker-compose.prod.yml exec -T laravel-api php artisan migrate:fresh --seed --force
