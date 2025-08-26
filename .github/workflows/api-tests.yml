@@ -53,8 +53,3 @@ jobs:
           name: newman-api-reports
           path: test-results/newman/
           if-no-files-found: warn
-
-      - name: Stop Docker containers
-        if: always()
-        run: |
-          docker compose down
