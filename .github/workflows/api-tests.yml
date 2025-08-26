@@ -27,33 +27,20 @@ jobs:
         run: |
           npm install -g newman newman-reporter-htmlextra
 
-      - name: Create Laravel .env file
+      - name: Create root .env file
         run: |
-          cd sprint5-with-bugs/API
-          cp .env_template .env
-          # Update database configuration for Docker environment
-          sed -i 's/DB_HOST=127.0.0.1/DB_HOST=mariadb/g' .env
-          sed -i 's/DB_DATABASE=${SECRET_DB}_with_bugs/DB_DATABASE=toolshop/g' .env
-          sed -i 's/DB_USERNAME=${SECRET_DB_USER}/DB_USERNAME=user/g' .env
-          sed -i 's/DB_PASSWORD=${SECRET_DB_PASS}/DB_PASSWORD=root/g' .env
-          sed -i 's/APP_ENV=production/APP_ENV=local/g' .env
-          sed -i 's/APP_DEBUG=false/APP_DEBUG=true/g' .env
+          echo "SPRINT=sprint5-with-bugs" > .env
+          echo "DISABLE_LOGGING=true" >> .env
 
       - name: Start application with Docker Compose
         run: |
           docker compose up -d
 
-      - name: Install required utilities
+      - name: Initialize Laravel application
         run: |
-          docker compose exec --user root laravel-api apk add --no-cache unzip
-
-      - name: Install Composer dependencies
-        run: |
-          # Install unzip in the composer service and run composer install
-          docker compose run --rm --entrypoint "sh -c 'apk add --no-cache unzip && composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-ffi && chown -R www-data /var/www && chmod 777 /var/www'" composer
-
-      - name: Run migrations and seed
-        run: |
+          # Let Laravel create its .env file and install dependencies
+          docker compose run --rm composer
+          # Run migrations and seed database
           docker compose exec laravel-api php artisan migrate:fresh --seed
 
       - name: Wait for API to be ready
