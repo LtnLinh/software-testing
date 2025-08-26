@@ -32,14 +32,25 @@ jobs:
           docker compose run --rm composer
           # Run migrations and seed
           docker compose exec laravel-api php artisan migrate:fresh --seed
-          # Wait for the API to be ready
-          sleep 30
 
-      - name: Check if API is running
+      - name: Wait for API to be ready
         run: |
-          curl -f http://localhost:8091/health || echo "API not ready yet, waiting..."
-          sleep 10
-          curl -f http://localhost:8091/health || echo "API still not ready"
+          echo "Waiting for API to be ready..."
+          timeout=120
+          counter=0
+          while [ $counter -lt $timeout ]; do
+            if curl -f http://localhost:8091/api/health > /dev/null 2>&1 || curl -f http://localhost:8091/health > /dev/null 2>&1 || curl -f http://localhost:8091/ > /dev/null 2>&1; then
+              echo "API is ready!"
+              break
+            fi
+            echo "API not ready yet, waiting... ($counter/$timeout)"
+            sleep 5
+            counter=$((counter + 5))
+          done
+          if [ $counter -eq $timeout ]; then
+            echo "Timeout waiting for API to be ready"
+            exit 1
+          fi
 
       - name: Prepare report directory
         run: |
