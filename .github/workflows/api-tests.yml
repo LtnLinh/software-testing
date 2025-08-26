@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  newman:
+  api-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,11 @@ jobs:
       - name: Start application with Docker Compose
         run: |
           docker compose up -d
+          # Wait for containers to be ready
+          sleep 10
+          # Install Composer dependencies
+          docker compose exec laravel-api composer install --no-interaction
+          # Run migrations and seed
           docker compose exec laravel-api php artisan migrate:fresh --seed
           # Wait for the API to be ready
           sleep 30
@@ -66,4 +71,4 @@ jobs:
       - name: Stop Docker containers
         if: always()
         run: |
-          docker-compose down
+          docker compose down
